@@ -58,25 +58,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void MoveForward()
     {
-        Vector3 movement = transform.forward * _movementSpeed * Time.fixedDeltaTime;
+        Vector3 movement = transform.forward * _movementSpeed * Time.deltaTime;
         _rigidbody.MovePosition(_rigidbody.position + movement);
     }
 
     private void MoveBackward()
     {
-        Vector3 movement = -transform.forward * _movementSpeed * Time.fixedDeltaTime;
+        Vector3 movement = -transform.forward * _movementSpeed * Time.deltaTime;
         _rigidbody.MovePosition(_rigidbody.position + movement);
     }
 
     private void MoveLeft()
     {
-        Vector3 movement = -transform.right * _movementSpeed * Time.fixedDeltaTime;
+        Vector3 movement = -transform.right * _movementSpeed * Time.deltaTime;
         _rigidbody.MovePosition(_rigidbody.position + movement);
     }
 
     private void MoveRight()
     {
-        Vector3 movement = transform.right * _movementSpeed * Time.fixedDeltaTime;
+        Vector3 movement = transform.right * _movementSpeed * Time.deltaTime;
         _rigidbody.MovePosition(_rigidbody.position + movement);
     }
 
