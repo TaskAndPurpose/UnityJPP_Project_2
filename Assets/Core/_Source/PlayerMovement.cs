@@ -3,63 +3,90 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    [Header("Component References")]
-    [SerializeField] private Camera mainCamera; // Reference to the main camera
-    [SerializeField] private Rigidbody rb; // Reference to the Rigidbody component
+    [Header("Player Movement Settings")]
+    [SerializeField] private Rigidbody _rigidbody;
+    [SerializeField] private float _movementSpeed = 5.0f;
+    [SerializeField] private float _rotationSpeed = 100.0f;
 
-    [Header("Player Settings")]
-    [SerializeField] private float movementSpeed = 5.0f; // Movement speed of the player
-    [SerializeField] private float rotationSpeed = 500.0f; // Rotation speed of the player
-
-
-
-    //Monobehaviour Methods
     void Update()
     {
-        HandleMovement();
-        HandleRotation();
+        PlayerController();
     }
 
-
-    /// <summary>
-    /// Class Methods
-    /// </summary>
-
-
-    // Classic Transform and RB movement
-    private void HandleMovement()
+    private void PlayerController()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-
-        Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput).normalized;
-        Vector3 movement = movementDirection * movementSpeed * Time.deltaTime;
-
-        rb.MovePosition(rb.position + movement);
+        HandleVerticalMovement();
+        HandleHorizontalMovement();
+        HandleRotationMovement();
     }
 
-
-    //Using Camera and Raycast to handle  rotation
-    private void HandleRotation()
+    private void HandleVerticalMovement()
     {
-        if (mainCamera != null)
+        if (Input.GetKey(KeyCode.W))
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-            float rayDistance;
-
-            if (groundPlane.Raycast(ray, out rayDistance))
-            {
-                Vector3 point = ray.GetPoint(rayDistance);
-                Vector3 direction = (point - transform.position).normalized;
-
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }
+            MoveForward();
         }
-        else
+        else if (Input.GetKey(KeyCode.S))
         {
-            Debug.LogError("Main camera reference not set!");
+            MoveBackward();
         }
+    }
+
+    private void HandleHorizontalMovement()
+    {
+        if (Input.GetKey(KeyCode.A))
+        {
+            MoveLeft();
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            MoveRight();
+        }
+    }
+
+    private void HandleRotationMovement()
+    {
+        if (Input.GetKey(KeyCode.Q))
+        {
+            RotateLeft();
+        }
+        else if (Input.GetKey(KeyCode.E))
+        {
+            RotateRight();
+        }
+    }
+
+    private void MoveForward()
+    {
+        Vector3 movement = transform.forward * _movementSpeed * Time.fixedDeltaTime;
+        _rigidbody.MovePosition(_rigidbody.position + movement);
+    }
+
+    private void MoveBackward()
+    {
+        Vector3 movement = -transform.forward * _movementSpeed * Time.fixedDeltaTime;
+        _rigidbody.MovePosition(_rigidbody.position + movement);
+    }
+
+    private void MoveLeft()
+    {
+        Vector3 movement = -transform.right * _movementSpeed * Time.fixedDeltaTime;
+        _rigidbody.MovePosition(_rigidbody.position + movement);
+    }
+
+    private void MoveRight()
+    {
+        Vector3 movement = transform.right * _movementSpeed * Time.fixedDeltaTime;
+        _rigidbody.MovePosition(_rigidbody.position + movement);
+    }
+
+    private void RotateLeft()
+    {
+        transform.Rotate(Vector3.up, -_rotationSpeed * Time.deltaTime);
+    }
+
+    private void RotateRight()
+    {
+        transform.Rotate(Vector3.up, _rotationSpeed * Time.deltaTime);
     }
 }
