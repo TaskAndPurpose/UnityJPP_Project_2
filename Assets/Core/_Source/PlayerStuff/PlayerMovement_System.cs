@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement_System : MonoBehaviour
 {
 
     [Header("Player Movement Settings")]
